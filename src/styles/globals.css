@@ -11,5 +11,25 @@
 }
 
 body {
-    font-family: Poppins;
+    font-family: Inter;
+}
+
+.scrollbar-universal::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 15px;
+}
+
+.scrollbar-universal.putih::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+.scrollbar-universal::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+}
+
+.scrollbar-universal::-webkit-scrollbar-thumb {
+  background-color: #1e3b8a21; /* ganti color jadi background-color */
+  border-radius: 15px;
 }

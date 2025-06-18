@@ -1,5 +1,3 @@
-import { FaRegEdit } from "react-icons/fa"
-import { FiChevronLeft } from "react-icons/fi"
 import { Link } from "react-router-dom"
 import CourseList from "./partial/CourseList"
 
@@ -27,14 +25,10 @@ const Program = () => {
                 <div className="px-3 pt-10 md:pt-0 lg:max-w-screen-lg 2xl:max-w-screen-2xl text-start flex flex-col -mt-16 md:mt-0 md:flex-row md:items-center w-full ">
                     <div className="flex flex-col gap-5 text-white mb-3 h-[inherit]">
                         <Link to={"/"}>
-                            {/* <div className="text-sm md:text-base md:flex flex-row md:items-center hidden gap-2 md:-mt-16 md:-ms-2 hover:underline cursor-pointer">
-                                <FiChevronLeft />
-                                <h6>Kembali</h6>
-                            </div> */}
                         </Link>
-                        <div className="flex flex-col gap-[3px] md:gap-2">
+                        <div className="flex flex-col gap-[3px] md:gap-5">
                             <h1 className="text-xl md:text-6xl font-semibold">Programmu</h1>
-                            {/* <p className="w-1/2 text-sm">Setiap langkah kecil adalah bagian dari perjalanan besar. Yuk pantau terus progres belajarmu di sini</p> */}
+                            <p className="w-4/5 text-sm">Setiap langkah kecil adalah bagian dari perjalanan besar. Yuk pantau terus progres belajarmu di sini</p>
                         </div>
                     </div>
                 </div>
