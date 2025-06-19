@@ -4,6 +4,7 @@ import { RiYoutubeLine } from "react-icons/ri";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { FaBookmark } from "react-icons/fa";
 
 const typeIcons = {
   video: (active) => (
@@ -32,13 +33,13 @@ const typeIcons = {
   ),
 };
 
-const Accordion = ({ chapter, materialId, onClickMaterial }) => {
+const Accordion = ({ chapter, materialId, handleShow }) => {
   const [open, setOpen] = useState(true);
 
   return (
     <div className="rounded-xl overflow-hidden mb-4 ">
       <button
-        className="w-full text-left px-4 py-4 font-bold text-white bg-green-600 flex justify-between items-center rounded-xl"
+        className="w-full text-left px-4 py-4 font-bold text-white !bg-gradient-to-r from-hijau to-hijau-dark flex justify-between items-center rounded-xl"
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center gap-2">
@@ -50,18 +51,18 @@ const Accordion = ({ chapter, materialId, onClickMaterial }) => {
 
       {open && (
         <div className="bg-white ps-3 pt-2 flex flex-col items-center shadow-xl">
-          {chapter.materials.map((material) => {
+          {chapter.materials.map((material, index) => {
             const isActive = materialId === material.id;
             const isComplete = material.is_complete;
 
             return (
               <button
-                key={material.id}
-                onClick={() => onClickMaterial(material)}
-                className={`duration-300 w-full text-left px-4 py-3 rounded-2xl my-2 mx-2 flex justify-between items-center shadow-sm  ${isComplete || isActive
-                    ? "text-black bg-yellow-400 hover:bg-blue-900 hover:text-white"
+                key={index}
+                onClick={() => handleShow(material)}
+                className={`duration-300 w-full text-left px-4 py-3 rounded-2xl my-2 mx-2 flex justify-between items-center shadow-sm relative  ${isComplete || isActive
+                    ? "text-black bg-kuning hover:bg-kuning-dark "
                     : "bg-zinc-200 hover:bg-zinc-100"
-                  } ${isActive ? "!bg-blue-900 !text-white" : ""}`}
+                  } ${isActive ? "!bg-gradient-to-r from-biru to-biru-dark !text-white" : ""}`}
               >
                 <div className="flex items-center gap-2">
                   {typeIcons[material.type] && typeIcons[material.type](isActive)}
@@ -69,19 +70,13 @@ const Accordion = ({ chapter, materialId, onClickMaterial }) => {
                   <div className="flex flex-col text-left">
                     <h2 className="text-sm font-bold max-w-[25rem] xs:max-w-none">{material.name}</h2>
                     <p className="text-xs text-start ms-1">{material.type}</p>
-
-                    {material.type === "quiz" &&
-                      chapter.name.toLowerCase().includes("post test") &&
-                      !material.is_complete && (
-                        <div className="flex gap-1 mt-1 items-center">
-                          <FiAlertTriangle className="text-red-500" />
-                          <p className="text-red-500 font-normal text-xs">
-                            verifikasi akun prakerja diperlukan lagi sebelum mengerjakan post test
-                          </p>
-                        </div>
-                      )}
                   </div>
                 </div>
+                {
+                  isActive && (
+                    <FaBookmark className="text-kuning text-2xl absolute right-12 -top-0.5"/>
+                  )
+                }
 
                 {isComplete && (
                   <TbRosetteDiscountCheckFilled className={`text-lg ${isActive ? "text-white" : "text-green-600"}`} />
