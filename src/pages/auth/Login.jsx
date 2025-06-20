@@ -1,42 +1,101 @@
-import TextInput from "../../components/ui/TextInput.jsx";
-import PasswordInput from "../../components/ui/PasswordInput.jsx";
-import Button from "../../components/ui/Button.jsx";
+import PasswordInput from "@/components/ui/PasswordInput.jsx";
+import Button from "@/components/ui/Button.jsx";
 import {FcGoogle} from "react-icons/fc";
 import {FaFacebook} from "react-icons/fa";
-import React from "react";
+import React, {useEffect} from "react";
 import {useForm} from "react-hook-form";
+import TextInput from "@/components/ui/TextInput.jsx";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {loginSuccess} from "@/store/authActions.js";
+
+const schema = z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
 
 const Login = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const dispatch = useDispatch();
+    const {isAuthenticated, token} = useSelector(state => state.auth);
+    const navigate = useNavigate();
 
-    const onSubmit = (data) => {
-        console.log(data);
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('authToken');
+        if (storedToken) {
+            // Jika ada token tersimpan, set status otentikasi
+            // Anda mungkin ingin memvalidasi token ini dengan backend di aplikasi nyata
+            dispatch(loginSuccess(storedToken, null)); // user bisa diambil dari token jika dienkripsi
+        }
+    }, [dispatch]);
+
+    const {register, handleSubmit, formState: {errors, isSubmitting}, setError} = useForm({
+        resolver: zodResolver(schema)
+    });
+
+    const onSubmit = async (data) => {
+        const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+        const fakeUser = {id: 1, username: 'testuser'};
+        dispatch(loginSuccess(fakeToken, fakeUser));
+        // try {
+        //     await axios.post('/auth/login', data);
+        //
+        //     navigate(`/verify-login?email=${data.email}`);
+        //
+        // } catch (error) {
+        //     console.error('Login error:', error);
+        //     if (error.response && error.response.status === 401) {
+        //         setError('email', {
+        //             type: '401',
+        //             message: 'Invalid email or password. Please try again.'
+        //         });
+        //     } else {
+        //         setError('email', {
+        //             type: 'server',
+        //             message: 'An unexpected error occurred. Please try again later.'
+        //         });
+        //     }
+        // }
     };
 
     return (
         <>
             <div className={'flex flex-col'}>
-                <h1 className={'text-4xl font-bold'}>Masuk</h1>
-                <p className={'text-sm font-normal'}>Belum punya akun? <a href={'#'}
-                                                                          className={'text-biru font-bold'}>Daftar
+                <h1 className={'text-3xl lg:text-4xl font-bold'}>Masuk</h1>
+                <p className={'text-xs lg:text-sm font-normal'}>Belum punya akun? <a href={'#'}
+                                                                                     className={'text-biru font-bold'}>Daftar
                     disini</a></p>
             </div>
-            <form onSubmit={onSubmit} className={'w-full space-y-2'}>
+            <form onSubmit={handleSubmit(onSubmit)} className={'w-full space-y-2'}>
                 <TextInput
                     name="email"
                     placeholder="Email"
                     register={register}
                     type={'email'}
-                    required
                 />
+                <div className="flex justify-between items-center mt-1">
+                    <p className={'text-red-600 text-xs'}>{errors.email && errors.email.message}</p>
+                    <Link to={'/forgot-password'}
+                          className="text-blue-600 hover:text-blue-800 text-xs font-medium focus:outline-none"
+                    >
+                        Lupa Password?
+                    </Link>
+                </div>
                 <PasswordInput
                     name="password"
                     placeholder={'Password'}
                     register={register}
                     required
                 />
-                <Button className={'w-full items-center justify-center'}>
-                    Masuk
+                {errors.password &&
+                    <p className={'text-red-600 text-xs'}>{errors.password.message}</p>}
+                <Button type={'submit'} className={`w-full items-center justify-center`} disabled={isSubmitting}>
+                    {isSubmitting ? <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"
+                             viewBox="0 0 24 24"></div>
+                    </div> : 'Masuk'}
                 </Button>
             </form>
             <div className="relative flex justify-center items-center my-6">

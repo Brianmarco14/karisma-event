@@ -1,6 +1,6 @@
-import {cn} from "../../utils/cn.js";
+import {cn} from "@/utils/cn.js";
 
-const Button = ({children, type, className, onClick, color = "biru", size = "md"}) => {
+const Button = ({children, type, className, onClick, color = "biru", size = "md", disabled = false}) => {
     // Define color styles
     const colorVariants = {
         biru: 'bg-biru hover:bg-biru-dark text-white',
@@ -28,6 +28,7 @@ const Button = ({children, type, className, onClick, color = "biru", size = "md"
                 'rounded-xl font-semibold flex items-center gap-2 capitalize w-fit', // Common styles
                 className // Allow custom classes to override or extend
             )}
+            disabled={disabled}
         >
             {children}
         </button>

@@ -1,11 +1,11 @@
 import React from 'react';
-import TextInput from "../../components/ui/TextInput.jsx";
-import PasswordInput from "../../components/ui/PasswordInput.jsx";
-import Button from "../../components/ui/Button.jsx";
 import {useForm} from "react-hook-form";
+import TextInput from "@/components/ui/TextInput.jsx";
+import PasswordInput from "@/components/ui/PasswordInput.jsx";
+import Button from "@/components/ui/Button.jsx";
 
 const Register = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const {register, handleSubmit} = useForm();
 
     const onSubmit = (data) => {
         console.log(data);
@@ -13,9 +13,9 @@ const Register = () => {
     return (
         <>
             <div className={'flex flex-col'}>
-                <h1 className={'text-4xl font-bold'}>Daftar Akun</h1>
-                <p className={'text-sm font-normal'}>Sudah punya akun? <a href={'#'}
-                                                                          className={'text-biru font-bold'}>Masuk</a>
+                <h1 className={'text-3xl lg:text-4xl font-bold'}>Daftar Akun</h1>
+                <p className={'text-xs lg:text-sm font-normal'}>Sudah punya akun? <a href={'#'}
+                                                                                     className={'text-biru font-bold'}>Masuk</a>
                 </p>
             </div>
             <form onSubmit={onSubmit} className={'w-full space-y-2'}>
