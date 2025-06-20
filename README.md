@@ -1,9 +1,9 @@
 Page Update
-[] login
-[] register
-[V] voucher Reedem
-[V] Programmu
-[] Learning
-[] Quiz Status
-[] Question
-[] Project Status
+- [ ] login
+- [ ] register
+- [x] voucher Reedem
+- [x] Programmu
+- [ ] Learning
+- [ ] Quiz Status
+- [ ] Question
+- [ ] Project Status
