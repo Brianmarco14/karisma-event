@@ -15,325 +15,15 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 import axios from "@/config/axios/index.js";
 
 
-const chapters = [
-    {
-        id: 1,
-        name: "Sesi Pembuka",
-        sequence: 1,
-        is_lock: false,
-        materials: [
-            {
-                id: 1,
-                name: "Selamat Datang",
-                type: "text",
-                sequence: 1,
-                is_complete: false,
-                is_verification: false,
-                status: false,
-                chapter_id: 1,
-            },
-            {
-                id: 2,
-                name: "Video Perkenalan Lembaga",
-                type: "video",
-                sequence: 2,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 1,
-            },
-        ],
-    },
-    {
-        id: 2,
-        name: "Pre-test",
-        sequence: 2,
-        is_lock: false,
-        materials: [
-            {
-                id: 3,
-                name: "Pre-test",
-                type: "quiz",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 2,
-            },
-        ],
-    },
-    {
-        id: 3,
-        name: "Sesi 1 - Pengenalan",
-        sequence: 3,
-        is_lock: false,
-        materials: [
-            {
-                id: 4,
-                name: "Reading Material",
-                type: "reading",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 3,
-            },
-            {
-                id: 5,
-                name: "Webinar: Pengenalan",
-                type: "webinar",
-                sequence: 2,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 3,
-            },
-            {
-                id: 6,
-                name: "Formative Test Sesi 1",
-                type: "quiz",
-                sequence: 3,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 3,
-            },
-            {
-                id: 7,
-                name: "Tugas Mandiri Sesi 1",
-                type: "practice",
-                sequence: 4,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 3,
-            },
-        ],
-    },
-    {
-        id: 4,
-        name: "Sesi 2 - Pengenalan",
-        sequence: 4,
-        is_lock: false,
-        materials: [
-            {
-                id: 8,
-                name: "Reading Material",
-                type: "reading",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 4,
-            },
-            {
-                id: 9,
-                name: "Webinar: Pengenalan",
-                type: "webinar",
-                sequence: 2,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 4,
-            },
-            {
-                id: 10,
-                name: "Formative Test Sesi 2",
-                type: "quiz",
-                sequence: 3,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 4,
-            },
-            {
-                id: 11,
-                name: "Tugas Mandiri Sesi 2",
-                type: "practice",
-                sequence: 4,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 4,
-            },
-        ],
-    },
-    {
-        id: 5,
-        name: "Sesi 3 - Pengenalan",
-        sequence: 5,
-        is_lock: false,
-        materials: [
-            {
-                id: 12,
-                name: "Reading Material",
-                type: "reading",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 5,
-            },
-            {
-                id: 13,
-                name: "Webinar: Pengenalan",
-                type: "webinar",
-                sequence: 2,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 5,
-            },
-            {
-                id: 14,
-                name: "Formative Test Sesi 3",
-                type: "quiz",
-                sequence: 3,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 5,
-            },
-            {
-                id: 15,
-                name: "Tugas Mandiri Sesi 3",
-                type: "practice",
-                sequence: 4,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 5,
-            },
-        ],
-    },
-    {
-        id: 6,
-        name: "Sesi 4 - Pengenalan",
-        sequence: 6,
-        is_lock: false,
-        materials: [
-            {
-                id: 16,
-                name: "Reading Material",
-                type: "reading",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 6,
-            },
-            {
-                id: 17,
-                name: "Webinar: Pengenalan",
-                type: "webinar",
-                sequence: 2,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 6,
-            },
-            {
-                id: 18,
-                name: "Formative Test Sesi 4",
-                type: "quiz",
-                sequence: 3,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 6,
-            },
-            {
-                id: 19,
-                name: "Tugas Mandiri Sesi 4",
-                type: "practice",
-                sequence: 4,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 6,
-            },
-        ],
-    },
-    {
-        id: 7,
-        name: "Evaluasi",
-        sequence: 7,
-        is_lock: false,
-        materials: [
-            {
-                id: 20,
-                name: "Evaluasi Akhir",
-                type: "embed",
-                sequence: 1,
-                is_complete: false,
-                is_verification: false,
-                status: false,
-                chapter_id: 7,
-            },
-        ],
-    },
-    {
-        id: 8,
-        name: "Post-test",
-        sequence: 8,
-        is_lock: false,
-        materials: [
-            {
-                id: 21,
-                name: "Soal Post Test",
-                type: "quiz",
-                sequence: 1,
-                is_complete: true,
-                is_verification: true,
-                status: false,
-                chapter_id: 8,
-            },
-        ],
-    },
-    {
-        id: 9,
-        name: "Unjuk Keterampilan",
-        sequence: 9,
-        is_lock: false,
-        materials: [
-            {
-                id: 22,
-                name: "Unjuk Keterampilan",
-                type: "practice",
-                sequence: 1,
-                is_complete: true,
-                is_verification: false,
-                status: false,
-                chapter_id: 9,
-            },
-        ],
-    },
-    {
-        id: 10,
-        name: "Reflective Journal",
-        sequence: 10,
-        is_lock: false,
-        materials: [
-            {
-                id: 23,
-                name: "Reflective Journal",
-                type: "essay",
-                sequence: 1,
-                is_complete: false,
-                is_verification: false,
-                status: false,
-                chapter_id: 10,
-            },
-        ],
-    },
-];
-
-
-
 const Learning = () => {
     const [activeMaterial, setActiveMaterial] = useState("")
     const [openSidebar, setOpenSidebar] = useState(false)
     const [activities, setActivities] = useState("")
+    const [input, setInput] = useState({
+        course_id: 0,
+        material_id: 0,
+        chapter_id: 0,
+    });
     const { slug } = useParams()
 
     useEffect(() => {
@@ -344,14 +34,11 @@ const Learning = () => {
                 setActivities(data);
 
                 if (data.chapters.length > 0 && data.chapters[0].materials.length > 0) {
-                    const input = {
+                    setInput({
                         course_id: data.course_id,
                         material_id: data.chapters[0].materials[0].material_id,
                         chapter_id: data.chapters[0].chapter_id,
-                    };
-
-                    const result = await axios.post("/course/material", input);
-                    setActiveMaterial(result.data.data)
+                    });
                 }
             } catch (error) {
                 console.error(error);
@@ -361,6 +48,29 @@ const Learning = () => {
 
         fetchData();
     }, [slug]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await axios.post("/course/material", input);
+                setActiveMaterial(result.data.data)
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        }
+
+        fetchData()
+    }, [input])
+
+    const handleActiveMaterial = (materialId, chapterId) => {
+        setInput({
+            course_id: activities.course_id,
+            material_id: materialId,
+            chapter_id: chapterId,
+        });
+    }
+
 
     const handleSidebar = () => {
         setOpenSidebar(!openSidebar)
@@ -452,6 +162,7 @@ const Learning = () => {
                         materialId={activeMaterial.id}
                         handleShow={handleShowMaterial}
                         handleSidebar={handleSidebar}
+                        handleActive={handleActiveMaterial}
                         isOpen={openSidebar}
                     />
                 )

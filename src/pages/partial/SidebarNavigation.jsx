@@ -1,7 +1,7 @@
 import { LuMonitorPlay } from "react-icons/lu";
 import Accordion from "../../components/Accordion";
 
-const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen }) => {
+const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen,  handleActive }) => {
     return (
         <div className={`absolute lg:static ${isOpen ? 'right-0' : '-right-96'} top-0  duration-300 flex flex-col content-end ease-in-out transition-all opacity-100 lg:w-[30%]`}>
             <div className="shrink">
@@ -51,6 +51,7 @@ const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen
                                 chapter={chapter}
                                 materialId={materialId}
                                 handleShow={handleShow}
+                                handleActive={handleActive}
                             />
                         ))}
                     </div>

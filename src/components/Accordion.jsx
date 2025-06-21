@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { FiCheckCircle, FiAlertTriangle } from "react-icons/fi";
-import { RiYoutubeLine } from "react-icons/ri";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaBookmark } from "react-icons/fa";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { RiYoutubeLine } from "react-icons/ri";
+import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 
 const typeIcons = {
   video: (active) => (
@@ -33,7 +31,7 @@ const typeIcons = {
   ),
 };
 
-const Accordion = ({ chapter, materialId, handleShow }) => {
+const Accordion = ({ chapter, materialId, handleShow, handleActive }) => {
   const [open, setOpen] = useState(true);
 
   return (
@@ -44,24 +42,24 @@ const Accordion = ({ chapter, materialId, handleShow }) => {
       >
         <div className="flex items-center gap-2">
           <MdKeyboardArrowRight className={`${open ? 'rotate-90' : ''} duration-200 text-xl`} />
-          <span>{chapter.chapter_name}</span>
+          <span>{chapter.chapter_name}{chapter.chapter_id}</span>
         </div>
-        <TbRosetteDiscountCheckFilled className="text-xl"/>
+        <TbRosetteDiscountCheckFilled className="text-xl" />
       </button>
 
       {open && (
         <div className="bg-white ps-3 pt-2 flex flex-col items-center shadow-xl">
           {chapter.materials?.map((material, index) => {
             const isActive = materialId === material.material_id;
-            const isComplete = material.is_complete;            
+            const isComplete = material.is_complete;
 
             return (
               <button
                 key={index}
-                onClick={() => handleShow(material)}
+                onClick={() => handleActive(material.material_id, chapter.chapter_id)}
                 className={`duration-300 w-full text-left px-4 py-3 rounded-2xl my-2 mx-2 flex justify-between items-center shadow-sm relative  ${isComplete || isActive
-                    ? "text-black bg-kuning hover:bg-kuning-dark "
-                    : "bg-zinc-200 hover:bg-zinc-100"
+                  ? "text-black bg-kuning hover:bg-kuning-dark "
+                  : "bg-zinc-200 hover:bg-zinc-100"
                   } ${isActive ? "!bg-gradient-to-r from-biru to-biru-dark !text-white" : ""}`}
               >
                 <div className="flex items-center gap-2">
@@ -74,13 +72,13 @@ const Accordion = ({ chapter, materialId, handleShow }) => {
                 </div>
                 {
                   isActive && (
-                    <FaBookmark className="text-kuning text-2xl absolute right-12 -top-0.5"/>
+                    <FaBookmark className="text-kuning text-2xl absolute right-12 -top-0.5" />
                   )
                 }
 
-                {isComplete && (
-                  <TbRosetteDiscountCheckFilled className={`text-lg ${isActive ? "text-white" : "text-green-600"}`} />
-                )}
+                <TbRosetteDiscountCheckFilled
+                  className={`text-lg ${isActive && isComplete ? "text-white" : isComplete ? "text-hijau" : "text-transparent"}`}
+                />
               </button>
             );
           })}

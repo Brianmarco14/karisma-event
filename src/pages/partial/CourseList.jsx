@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 const CourseList = ({ data }) => {
     return (
         <div className="w-full flex justify-center">
-            <div className="lg:max-w-screen-lg 2xl:max-w-screen-2xl w-full px-2 lg:px-4 2xl:px-6 lg:py-4 2xl:py-5 border rounded-2xl shadow-xl top-0 bg-white">
+            <div className="lg:max-w-screen-lg 2xl:max-w-screen-2xl w-full px-2 lg:px-4 2xl:px-6 lg:py-4 2xl:py-5 border rounded-b-2xl shadow-xl top-0 bg-white">
                 <div className="hidden md:flex justify-between">
                     <label className="border pe-2 flex items-center text-gray-400 !outline-transparent rounded-xl overflow-hidden">
                         <input type="text" className="grow outline-none p-2" placeholder="Cari Sertifikat" />
@@ -62,15 +62,7 @@ const CourseList = ({ data }) => {
                                         Lanjut
                                     </button>
                                 </Link>
-                                </div>
-                                {/* <div className="flex items-center">
-                                    <RiFileList3Fill className="size-5 md:size-3 lg:size-6 text-green-600" />
-                                    <h2 className="font-semibold text-sm lg:text-base mx-4 md:mx-3">
-                                        Nilai Ujian : -
-                                    </h2>
-                                </div> */}
-                                
-                               
+                                </div>               
                             </div>
                         </div>
                     ))
