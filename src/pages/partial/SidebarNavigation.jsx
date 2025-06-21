@@ -5,7 +5,7 @@ const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen
     return (
         <div className={`absolute lg:static ${isOpen ? 'right-0' : '-right-96'} top-0  duration-300 flex flex-col content-end ease-in-out transition-all opacity-100 lg:w-[30%]`}>
             <div className="shrink">
-                <div className="navbar top-0 sticky z-10 bg-gradient-to-r from-blue-900 to-green-600 flex justify-end">
+                <div className="navbar top-0 sticky z-10 bg-gradient-to-r from-biru-dark to-biru/90 flex justify-end">
                     <div className=" py-2 px-4 lg:px-5 lg:py-5 w-full">
                         <div className="flex grow ">
                             <div role="tablist" className="justify-between lg:justify-start w-full flex">
