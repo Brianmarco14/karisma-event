@@ -1,7 +1,11 @@
 import React from 'react';
-import {Link, Outlet} from "react-router-dom";
+import {Link, Navigate, Outlet} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const GuestLayout = () => {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+    if (isAuthenticated) return <Navigate to={'/'}/>;
 
     return (<div className="bg-biru-dark flex flex-col items-center justify-center relative min-h-screen">
         <img src={`/abstract-bg.webp`} className={'absolute top-0 left-0 h-full w-full object-cover z-0'}

@@ -7,6 +7,8 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 import OtpInput from '@/components/OtpInput.jsx';
 import Button from '@/components/ui/Button.jsx';
 import axios from "@/config/axios/index.js";
+import {useDispatch} from "react-redux";
+import {login} from "@/store/authReducer.js";
 
 
 const schema = z.object({
@@ -14,6 +16,7 @@ const schema = z.object({
 });
 
 const VerifyLogin = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -27,28 +30,26 @@ const VerifyLogin = () => {
     }, [email, navigate]);
 
     const {
-        control, // 'control' prop is passed to OtpInput to connect it with RHF
-        handleSubmit, // Function to handle form submission, wrapping onSubmit
-        formState: {errors, isSubmitting}, // 'errors' for displaying validation messages, 'isSubmitting' for loading state
-        setError, // Function to manually set form errors (e.g., from API responses)
+        control,
+        handleSubmit,
+        formState: {errors, isSubmitting},
+        setError,
     } = useForm({
-        resolver: zodResolver(schema), // Zod resolver for schema validation
+        resolver: zodResolver(schema),
         defaultValues: {
-            otp: '', // Initialize the 'token' field in the form state
+            otp: '',
         },
     });
 
 
-    // Function to handle form submission when validation passes
     const onSubmit = async (data) => {
-        console.log('Verifying token:', data.otp); // Log the token being verified
-
         try {
-            await axios.post('/auth/otp/verify', {
+            const response = await axios.post('/auth/otp/verify', {
                 ...data,
                 email
             })
-            navigate('/');
+            dispatch(login({token: response.data.token}))
+            // navigate('/');
         } catch (error) {
             console.log(error)
             setError('otp', {

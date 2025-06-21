@@ -2,14 +2,14 @@ import PasswordInput from "@/components/ui/PasswordInput.jsx";
 import Button from "@/components/ui/Button.jsx";
 import {FcGoogle} from "react-icons/fc";
 import {FaFacebook} from "react-icons/fa";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
 import TextInput from "@/components/ui/TextInput.jsx";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Link, useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {loginSuccess} from "@/store/authActions.js";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import axios from "@/config/axios/index.js";
+import {useMessage} from "@/context/MessageContext.jsx";
 
 const schema = z.object({
     email: z.string().email('Invalid email address'),
@@ -17,47 +17,43 @@ const schema = z.object({
 });
 
 const Login = () => {
-    const dispatch = useDispatch();
-    const {isAuthenticated, token} = useSelector(state => state.auth);
     const navigate = useNavigate();
+    const location = useLocation();
+    const {addMessage} = useMessage();
+    const addedRef = useRef(false);
 
+    const searchParams = new URLSearchParams(location.search);
+    const message = searchParams.get('message');
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
-        if (storedToken) {
-            // Jika ada token tersimpan, set status otentikasi
-            // Anda mungkin ingin memvalidasi token ini dengan backend di aplikasi nyata
-            dispatch(loginSuccess(storedToken, null)); // user bisa diambil dari token jika dienkripsi
+        if (message && !addedRef.current) {
+            addMessage(message);
+            addedRef.current = true;
         }
-    }, [dispatch]);
+    }, [message]);
 
     const {register, handleSubmit, formState: {errors, isSubmitting}, setError} = useForm({
         resolver: zodResolver(schema)
     });
 
     const onSubmit = async (data) => {
-        const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-        const fakeUser = {id: 1, username: 'testuser'};
-        dispatch(loginSuccess(fakeToken, fakeUser));
-        // try {
-        //     await axios.post('/auth/login', data);
-        //
-        //     navigate(`/verify-login?email=${data.email}`);
-        //
-        // } catch (error) {
-        //     console.error('Login error:', error);
-        //     if (error.response && error.response.status === 401) {
-        //         setError('email', {
-        //             type: '401',
-        //             message: 'Invalid email or password. Please try again.'
-        //         });
-        //     } else {
-        //         setError('email', {
-        //             type: 'server',
-        //             message: 'An unexpected error occurred. Please try again later.'
-        //         });
-        //     }
-        // }
+        try {
+            await axios.post('/auth/login', data);
+
+            navigate(`/verify-login?email=${data.email}`);
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                setError('email', {
+                    type: '401',
+                    message: 'Invalid email or password. Please try again.'
+                });
+            } else {
+                setError('email', {
+                    type: 'server',
+                    message: 'An unexpected error occurred. Please try again later.'
+                });
+            }
+        }
     };
 
     return (

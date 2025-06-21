@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "@/store/index.js";
-import {logout} from "@/store/authActions.js";
+import {logout} from "@/store/authReducer.js";
 
 const instance = axios.create({
     baseURL: 'http://localhost:3000',
@@ -15,6 +15,7 @@ instance.interceptors.request.use(function (config) {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
 }, function (error) {
     return Promise.reject(error);
@@ -29,7 +30,6 @@ instance.interceptors.response.use(function (response) {
 
         store.dispatch(logout());
 
-        history.push('/login');
         alert('Sesi Anda telah berakhir. Silakan login kembali.');
 
         return Promise.reject(error);

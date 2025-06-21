@@ -14,8 +14,8 @@ const Button = ({children, type, className, onClick, color = "biru", size = "md"
     // Define size styles
     const sizeVariants = {
         sm: 'px-2 py-1 text-xs',      // Small button
-        md: 'px-4 py-2 text-sm',      // Medium button (default)
-        lg: 'px-6 py-3 text-base'     // Large button
+        md: 'px-4 py-3 text-sm',      // Medium button (default)
+        lg: 'px-6 py-5 text-base'     // Large button
     };
 
     return (
