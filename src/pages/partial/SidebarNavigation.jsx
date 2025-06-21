@@ -18,7 +18,7 @@ const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen
                                         <LuMonitorPlay className={"text-xl"} />
                                         <div className={"flex flex-col items-center"}>
                                             <h1 className={"font-semibold text-base"}>Konten Kelas</h1>
-                                            <span className={"text-xs font-medium"}>22 Konten Kelas</span>
+                                            <span className={"text-xs font-medium"}>{data.chapters?.length} Konten Kelas</span>
                                         </div>
                                     </div>
                                 </button>
@@ -45,7 +45,7 @@ const SidebarNavigation = ({ data, materialId, handleShow, handleSidebar, isOpen
                 <div className="overflow-y-scroll  scrollbar-universal [&::-webkit-scrollbar]:w-1 h-[90vh] 2xl:h-[92vh]"
                     style={{ direction: "rtl" }}>
                     <div className="px-3 py-3" style={{ direction: "ltr" }}>
-                        {data.map((chapter, index) => (
+                        {data.chapters?.map((chapter, index) => (
                             <Accordion
                                 key={index}
                                 chapter={chapter}

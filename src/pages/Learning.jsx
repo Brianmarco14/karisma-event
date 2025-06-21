@@ -1,7 +1,7 @@
 import { FiChevronRight } from "react-icons/fi"
 import { LuMonitorPlay } from "react-icons/lu"
 import { TiArrowBack } from "react-icons/ti"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import SidebarNavigation from "./partial/SidebarNavigation"
 import QuizDetail from "./partial/QuizDetail"
 import WebinarDetail from "./partial/WebinarDetail"
@@ -12,6 +12,8 @@ import PracticeDetail from "./partial/PracticeDetail"
 import { useEffect, useState } from "react"
 import Button from "../components/Button"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
+import axios from "@/config/axios/index.js";
+
 
 const chapters = [
     {
@@ -331,10 +333,34 @@ const chapters = [
 const Learning = () => {
     const [activeMaterial, setActiveMaterial] = useState("")
     const [openSidebar, setOpenSidebar] = useState(false)
+    const [activities, setActivities] = useState("")
+    const { slug } = useParams()
 
     useEffect(() => {
-        setActiveMaterial(chapters[0].materials[0])
-    }, [])
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/course/${slug}/activity`);
+                const data = res.data.data;
+                setActivities(data);
+
+                if (data.chapters.length > 0 && data.chapters[0].materials.length > 0) {
+                    const input = {
+                        course_id: data.course_id,
+                        material_id: data.chapters[0].materials[0].material_id,
+                        chapter_id: data.chapters[0].chapter_id,
+                    };
+
+                    const result = await axios.post("/course/material", input);
+                    setActiveMaterial(result.data.data)
+                }
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        };
+
+        fetchData();
+    }, [slug]);
 
     const handleSidebar = () => {
         setOpenSidebar(!openSidebar)
@@ -376,17 +402,17 @@ const Learning = () => {
                             </Link>
                         </div>
                         <div className="grow w-full lg:flex flex-col justify-center items-start md:border-l-2 p-0 md:py-2 md:px-4 gap-1 ">
-                            <span className="text-xs md:text-base hidden md:block font-bold uppercase">Keterampilan Komunikasi Efektif untuk Pemandu Wisata</span>
+                            <span className="text-xs md:text-base hidden md:block font-bold uppercase">{activities.course_name}</span>
                             <div className="flex flex-col items-start gap-1 w-full mb-3 md:mb-0 ">
                                 <h2 className="text-xs md:text-base w-full flex justify-between">
                                     <div className={"font-semibold text-[11px] xs:text-xs md:text-sm"}>Progress Kelas </div>
-                                    <div className={"font-semibold text-[11px] xs:text-xs md:text-sm"}>100%</div>
+                                    <div className={"font-semibold text-[11px] xs:text-xs md:text-sm"}>{activities.progress}%</div>
                                 </h2>
                                 <h2 className="text-xs hidden">
-                                    <b>Progress : 100% </b>
+                                    <b>Progress : {activities.progress}% </b>
                                 </h2>
                                 <div className={"w-full h-3 md:h-3 bg-gray-100 rounded-full overflow-hidden"}>
-                                    <div className={"bg-green-500 h-full"} style={{ width: `${100}%` }}>
+                                    <div className={"bg-green-500 h-full"} style={{ width: `${activities.progress}%` }}>
                                         {"\u00A0"}
                                     </div>
                                 </div>
@@ -419,13 +445,17 @@ const Learning = () => {
                     </div>
                 </div>
             </div>
-            <SidebarNavigation
-                data={chapters}
-                materialId={activeMaterial.id}
-                handleShow={handleShowMaterial}
-                handleSidebar={handleSidebar}
-                isOpen={openSidebar}
-            />
+            {
+                activities && (
+                    <SidebarNavigation
+                        data={activities}
+                        materialId={activeMaterial.id}
+                        handleShow={handleShowMaterial}
+                        handleSidebar={handleSidebar}
+                        isOpen={openSidebar}
+                    />
+                )
+            }
         </div>
     )
 }

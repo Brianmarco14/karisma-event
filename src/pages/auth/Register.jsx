@@ -4,22 +4,24 @@ import TextInput from "@/components/ui/TextInput.jsx";
 import PasswordInput from "@/components/ui/PasswordInput.jsx";
 import Button from "@/components/ui/Button.jsx";
 import {Link} from "react-router-dom";
+import axios from "@/config/axios/index.js";
+
 
 const Register = () => {
     const {register, handleSubmit} = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async(data) => {
+       await axios.post('/auth/register', data);
     };
     return (
         <>
             <div className={'flex flex-col'}>
                 <h1 className={'text-3xl lg:text-4xl font-bold'}>Daftar Akun</h1>
-                <p className={'text-xs lg:text-sm font-normal'}>Sudah punya akun? <Link to={'/login'}
-                                                                                        className={'text-biru font-bold'}>Masuk</Link>
+                <p className={'text-xs lg:text-sm font-normal'}>Sudah punya akun? 
+                    <Link to={'/login'} className={'text-biru font-bold'}>Masuk</Link>
                 </p>
             </div>
-            <form onSubmit={onSubmit} className={'w-full space-y-2'}>
+            <form onSubmit={handleSubmit(onSubmit)} className={'w-full space-y-2'}>
                 <TextInput
                     name="name"
                     placeholder="Nama Lengkap"
@@ -55,7 +57,7 @@ const Register = () => {
                 />
                 <div className="flex flex-wrap gap-3 justify-between">
                     <div className="flex items-start gap-2 text-sm">
-                        <input type="checkbox" className="mt-1 cursor-pointer" id="snk" onChange={() => {
+                        <input type="checkbox" className="mt-1 cursor-pointer" id="snk" required onChange={() => {
                         }}/>
                         <label htmlFor="snk" className="md:text-base text-xs">
                             Dengan menandai kotak di samping, Anda telah membaca dan menyetujui <a

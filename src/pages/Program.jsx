@@ -1,24 +1,24 @@
 import { Link } from "react-router-dom"
 import CourseList from "./partial/CourseList"
-
-// const tabs = [
-//     {id: 1, name: "Pembelian"},
-//     {id: 2, name: "Program"},
-//     {id: 3, name: "Sertifikat"},
-// ]
+import { useEffect, useState } from "react"
+import axios from "@/config/axios/index.js";
 
 const Program = () => {
-    //     const [tab, setTab] = useState(2)
-    //     const handleTab = (index) => {
-    //         setTab(index)
-    //     } 
+    const [courses, setCourses] = useState([])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/course')
+                setCourses(res.data.data)
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
+        }
 
+        fetchData()
+    }, [])
 
-    //     const tabContent = {
-    //     1: <TransactionList />,
-    //     2: <CourseList />,
-    //     3: <CertificateList />,
-    //   }
     return (
         <div>
             <div className="2xl:mt-20 py-24 bg-gradient-to-br md:bg-gradient-to-r from-blue-900 to-green-700  text-xl flex justify-center items-center relative">
@@ -36,8 +36,7 @@ const Program = () => {
                     <img src="/robot.webp" alt="" className="transform scale-x-[-1]" />
                 </div>
             </div>
-            {/* <Tab data={tabs} handle={handleTab} active={tab}/> */}
-            <CourseList />
+            <CourseList data={courses}/>
         </div>
     )
 }

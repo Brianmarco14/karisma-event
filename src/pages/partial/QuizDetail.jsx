@@ -3,7 +3,7 @@ import Button from "../../components/Button"
 import Question from "./Question"
 import StatusQuiz from "./StatusQuiz"
 
-const QuizDetail = () => {
+const QuizDetail = ({data}) => {
   const [openModal, setOpenModal] = useState(false)
   const [openQuestion, setOpenQuestion] = useState(false)
   const handleModal = () => {
@@ -18,7 +18,7 @@ const QuizDetail = () => {
   const nilai = 80
 
   if (!openQuestion) {
-    if (selesai) {
+    if (data.is_complete) {
       return (
           <StatusQuiz score={nilai}/>
       )

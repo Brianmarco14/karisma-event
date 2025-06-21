@@ -44,16 +44,16 @@ const Accordion = ({ chapter, materialId, handleShow }) => {
       >
         <div className="flex items-center gap-2">
           <MdKeyboardArrowRight className={`${open ? 'rotate-90' : ''} duration-200 text-xl`} />
-          <span>{chapter.name}</span>
+          <span>{chapter.chapter_name}</span>
         </div>
         <TbRosetteDiscountCheckFilled className="text-xl"/>
       </button>
 
       {open && (
         <div className="bg-white ps-3 pt-2 flex flex-col items-center shadow-xl">
-          {chapter.materials.map((material, index) => {
-            const isActive = materialId === material.id;
-            const isComplete = material.is_complete;
+          {chapter.materials?.map((material, index) => {
+            const isActive = materialId === material.material_id;
+            const isComplete = material.is_complete;            
 
             return (
               <button
@@ -65,11 +65,11 @@ const Accordion = ({ chapter, materialId, handleShow }) => {
                   } ${isActive ? "!bg-gradient-to-r from-biru to-biru-dark !text-white" : ""}`}
               >
                 <div className="flex items-center gap-2">
-                  {typeIcons[material.type] && typeIcons[material.type](isActive)}
+                  {typeIcons[material.material_type] && typeIcons[material.material_type](isActive)}
 
                   <div className="flex flex-col text-left">
-                    <h2 className="text-sm font-bold max-w-[25rem] xs:max-w-none">{material.name}</h2>
-                    <p className="text-xs text-start ms-1">{material.type}</p>
+                    <h2 className="text-sm font-bold max-w-[25rem] xs:max-w-none">{material.material_name}</h2>
+                    <p className="text-xs text-start ms-1">{material.material_type}</p>
                   </div>
                 </div>
                 {
