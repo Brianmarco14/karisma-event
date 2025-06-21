@@ -60,9 +60,9 @@ const Login = () => {
         <>
             <div className={'flex flex-col'}>
                 <h1 className={'text-3xl lg:text-4xl font-bold'}>Masuk</h1>
-                <p className={'text-xs lg:text-sm font-normal'}>Belum punya akun? <a href={'#'}
+                <p className={'text-xs lg:text-sm font-normal'}>Belum punya akun? <Link to={'/register'}
                                                                                      className={'text-biru font-bold'}>Daftar
-                    disini</a></p>
+                    disini</Link></p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className={'w-full space-y-2'}>
                 <TextInput

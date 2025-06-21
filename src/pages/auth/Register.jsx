@@ -3,6 +3,7 @@ import {useForm} from "react-hook-form";
 import TextInput from "@/components/ui/TextInput.jsx";
 import PasswordInput from "@/components/ui/PasswordInput.jsx";
 import Button from "@/components/ui/Button.jsx";
+import {Link} from "react-router-dom";
 
 const Register = () => {
     const {register, handleSubmit} = useForm();
@@ -14,8 +15,8 @@ const Register = () => {
         <>
             <div className={'flex flex-col'}>
                 <h1 className={'text-3xl lg:text-4xl font-bold'}>Daftar Akun</h1>
-                <p className={'text-xs lg:text-sm font-normal'}>Sudah punya akun? <a href={'#'}
-                                                                                     className={'text-biru font-bold'}>Masuk</a>
+                <p className={'text-xs lg:text-sm font-normal'}>Sudah punya akun? <Link to={'/login'}
+                                                                                        className={'text-biru font-bold'}>Masuk</Link>
                 </p>
             </div>
             <form onSubmit={onSubmit} className={'w-full space-y-2'}>

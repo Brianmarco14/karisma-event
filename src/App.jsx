@@ -17,7 +17,6 @@ const App = () => {
             <Routes>
                 <Route element={<GuestLayout/>}>
                     <Route path={'/login'} element={<Login/>}/>
-                    <Route path={'/register'} element={<></>}/>
                     <Route path={'/register'} element={<Register/>}/>
                     <Route path={'/forgot-password'} element={<ForgotPassword/>}/>
                     <Route path={'/reset-password'} element={<ResetPassword/>}/>
