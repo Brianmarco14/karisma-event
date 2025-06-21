@@ -33,6 +33,11 @@ const CourseList = ({ data }) => {
                     </select>
                 </div>
                 {
+                    data.length === 0 && (
+                        <div className="flex justify-center items-center w-full">Belum ada pelatihan yang anda miliki</div>
+                    )
+                }
+                {
                     data && data.length > 0 && data.map((item, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_1fr] gap-y-2 md:gap-y-0 md:gap-x-4  overflow-hidden p-3 md:p-4 my-4 rounded-lg text-black border border-gray-300">
                             <div className="rounded-md overflow-hidden">

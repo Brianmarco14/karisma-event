@@ -42,7 +42,7 @@ const Accordion = ({ chapter, materialId, handleShow, handleActive }) => {
       >
         <div className="flex items-center gap-2">
           <MdKeyboardArrowRight className={`${open ? 'rotate-90' : ''} duration-200 text-xl`} />
-          <span>{chapter.chapter_name}{chapter.chapter_id}</span>
+          <span>{chapter.chapter_name}</span>
         </div>
         <TbRosetteDiscountCheckFilled className="text-xl" />
       </button>

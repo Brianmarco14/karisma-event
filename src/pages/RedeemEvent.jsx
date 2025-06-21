@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar"
 const RedeemEvent = () => {
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="bg-[#0d1b47] min-h-[100vh] flex justify-center items-center relative">
                 <img src="/abstract-bg.webp" alt="" className="absolute top-0 left-0 h-full w-full" />
                 <div className="bg-white p-5 lg:p-10 rounded-xl max-w-xs lg:max-w-xl 2xl:max-w-screen-sm w-full flex flex-col gap-5 lg:gap-8 items-center z-10">

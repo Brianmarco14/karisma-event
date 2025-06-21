@@ -2,7 +2,7 @@ import { useState } from "react"
 import Button from "../../components/Button"
 import Instruction from "./Instruction"
 
-const PracticeDetail = () => {
+const PracticeDetail = ({data}) => {
   const [openDetail, setOpenDetail] = useState(false)
   const handleDetail = () => {
     setOpenDetail(!openDetail)
@@ -22,7 +22,7 @@ const PracticeDetail = () => {
           <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start gap-y-5">
             <div className="flex flex-col items-center lg:items-start">
               <Button color="merah" className={"text-white !py-1 !text-xs"}>Belum Mengirim Tugas</Button>
-              <h3 className="md:text-xl text-center text-white font-bold mt-2 md:mt-5">TPM</h3>
+              <h3 className="md:text-xl text-center text-white font-bold mt-2 md:mt-5">{data.name}</h3>
               <p className="mt-1 text-base text-white text-center lg:text-start w-full">Ayo segera kerjakan tugas berikut ini</p>
             </div>
             <Button color="biru" onClick={handleDetail}>Lihat Detail Tugas</Button>
