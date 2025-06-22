@@ -38,7 +38,7 @@ const Learning = () => {
 
         switch (activeMaterial.type) {
             case 'quiz':
-                return <QuizDetail data={activeMaterial}/>;
+                return <QuizDetail/>;
             case 'reading':
                 return <ReadingDetail data={activeMaterial}/>;
             case 'webinar':

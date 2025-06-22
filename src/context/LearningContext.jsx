@@ -6,6 +6,9 @@ export const LearningProvider = ({children}) => {
     const [courseId, setCourseId] = useState(null);
     const [chapterId, setChapterId] = useState(null);
     const [materialId, setMaterialId] = useState(null);
+    const [quizMaterialId, setQuizMaterialId] = useState(null);
+    const [quizLogId, setQuizLogId] = useState(null)
+    const [quizLog, setQuizLog] = useState(null)
     const [activity, setActivity] = useState(null);
     const [slug, setSlug] = useState(null);
     const [loadingActivity, setLoadingActivity] = useState(false);
@@ -14,6 +17,7 @@ export const LearningProvider = ({children}) => {
     const [activeMaterial, setActiveMaterial] = useState(null);
     const [isFirstMaterial, setIsFirstMaterial] = useState(true);
     const [isLastMaterial, setIsLastMaterial] = useState(true);
+    const [openQuestion, setOpenQuestion] = useState(false)
 
     const [quizQuestions, setQuizQuestions] = useState(null);
     const [currentQuizLog, setCurrentQuizLog] = useState(null);
@@ -35,6 +39,13 @@ export const LearningProvider = ({children}) => {
                 material_id: materialId,
             });
             setActiveMaterial(response.data.data);
+
+            if (response.data.data.type === 'quiz') {
+                setQuizMaterialId(response.data.data.detail.id)
+                setQuizLog(response.data.data.detail.log)
+            } else {
+                setOpenQuestion(false)
+            }
         } catch (err) {
             console.error("Error fetching material:", err);
             setErrorActivity(err);
@@ -71,16 +82,20 @@ export const LearningProvider = ({children}) => {
         }
     }, []);
 
+    const fetchCompleteMaterial = useCallback(async () => {
+        await axios.post(`/course/material/complete`, {
+            course_id: courseId,
+            chapter_id: chapterId,
+            material_id: materialId,
+        });
+    }, [chapterId, courseId, materialId]);
+
     const goToNextMaterial = useCallback(async () => {
         if (!chapters || !chapterId || !materialId) return;
 
         if (courseId && chapterId && materialId && activeMaterial?.is_complete === 0) {
             try {
-                await axios.post(`/course/material/complete`, {
-                    course_id: courseId,
-                    chapter_id: chapterId,
-                    material_id: materialId,
-                });
+                await fetchCompleteMaterial();
                 console.log("Current material marked as complete upon Next click:", activeMaterial.title);
                 setActiveMaterial(prev => prev ? {...prev, is_complete: 1} : null);
             } catch (completeErr) {
@@ -108,7 +123,7 @@ export const LearningProvider = ({children}) => {
                 console.log("No more materials (end of course).");
             }
         }
-    }, [chapters, chapterId, materialId, courseId, activeMaterial, setChapterId, setMaterialId, setActiveMaterial]);
+    }, [chapters, chapterId, materialId, courseId, activeMaterial, fetchCompleteMaterial]);
 
     const goToPrevMaterial = useCallback(() => {
         if (!chapters || !chapterId || !materialId) return;
@@ -190,9 +205,9 @@ export const LearningProvider = ({children}) => {
                 material_id: materialId,
                 quiz_material_id: quizMaterialId,
             });
-            setQuizQuestions(response.data.data.questions);
+            setQuizQuestions(response.data.data.quizzes);
             setCurrentQuizLog(response.data.data.log);
-            console.log("Fetched quiz questions and log:", response.data.data);
+            setQuizLogId(response.data.data.log_id)
         } catch (err) {
             console.error("Error fetching quiz questions:", err);
             setErrorQuiz(err);
@@ -202,13 +217,13 @@ export const LearningProvider = ({children}) => {
     }, [materialId]);
 
     const answerQuizQuestion = useCallback(async (quizId, answerId) => {
-        if (!currentQuizLog?.log_id || !quizId || !answerId) {
+        if (!quizLogId || !quizId || !answerId) {
             setErrorQuiz("Quiz log ID, quiz ID, or answer ID is missing.");
             return;
         }
         try {
             const response = await axios.post(`/course/quiz/answer`, {
-                log_id: currentQuizLog.log_id,
+                log_id: quizLogId,
                 quiz_id: quizId,
                 answer_id: answerId,
             });
@@ -217,10 +232,10 @@ export const LearningProvider = ({children}) => {
             console.error("Error submitting quiz answer:", err);
             setErrorQuiz(err);
         }
-    }, [currentQuizLog]);
+    }, [quizLogId]);
 
     const finishQuiz = useCallback(async () => {
-        if (!currentQuizLog?.log_id) {
+        if (!quizLogId) {
             setErrorQuiz("Quiz log ID is missing to finish quiz.");
             return;
         }
@@ -228,26 +243,33 @@ export const LearningProvider = ({children}) => {
         setErrorQuiz(null);
         try {
             const response = await axios.post(`/course/quiz/finish`, {
-                log_id: currentQuizLog.log_id,
+                log_id: quizLogId,
             });
             console.log("Quiz finished:", response.data);
             setQuizQuestions(null);
             setCurrentQuizLog(null);
+            setOpenQuestion(false)
+            await fetchCompleteMaterial()
+            await fetchActivity()
         } catch (err) {
             console.error("Error finishing quiz:", err);
             setErrorQuiz(err);
         } finally {
             setLoadingQuiz(false);
         }
-    }, [currentQuizLog]);
+    }, [fetchActivity, fetchCompleteMaterial, quizLogId]);
 
     const value = {
-        courseId, setCourseId,
-        chapterId, setChapterId,
-        materialId, setMaterialId,
+        courseId,
+        setCourseId,
+        chapterId,
+        setChapterId,
+        materialId,
+        setMaterialId,
         activity,
         chapters,
-        slug, setSlug,
+        slug,
+        setSlug,
         activeMaterial,
         loadingActivity,
         errorActivity,
@@ -256,9 +278,17 @@ export const LearningProvider = ({children}) => {
         goToPrevMaterial,
         isFirstMaterial,
         isLastMaterial,
-        quizQuestions, currentQuizLog,
-        loadingQuiz, errorQuiz,
-        fetchQuizQuestions, answerQuizQuestion, finishQuiz
+        quizQuestions,
+        currentQuizLog,
+        loadingQuiz,
+        errorQuiz,
+        fetchQuizQuestions,
+        answerQuizQuestion,
+        finishQuiz,
+        quizLog,
+        openQuestion,
+        setOpenQuestion,
+        setQuizQuestions
     };
 
     return (
