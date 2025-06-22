@@ -2,7 +2,7 @@ import {LuMonitorPlay} from "react-icons/lu";
 import Accordion from "../../components/Accordion";
 import {useLearning} from "@/context/LearningContext.jsx";
 
-const SidebarNavigation = ({handleShow, handleSidebar, isOpen, handleActive}) => {
+const SidebarNavigation = ({handleSidebar, isOpen}) => {
     const {
         chapters,
     } = useLearning();
@@ -58,8 +58,6 @@ const SidebarNavigation = ({handleShow, handleSidebar, isOpen, handleActive}) =>
                             <Accordion
                                 key={index}
                                 chapter={chapter}
-                                handleShow={handleShow}
-                                handleActive={handleActive}
                             />
                         ))}
                     </div>

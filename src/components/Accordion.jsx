@@ -32,7 +32,7 @@ const typeIcons = {
     ),
 };
 
-const Accordion = ({chapter, handleShow}) => {
+const Accordion = ({chapter}) => {
     const {materialId, setMaterialId, setChapterId} = useLearning();
     const [open, setOpen] = useState(false);
 

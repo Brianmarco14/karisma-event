@@ -21,6 +21,9 @@ export const LearningProvider = ({children}) => {
     const [errorActivity, setErrorActivity] = useState(null);
     const [chapters, setChapters] = useState(null)
     const [activeMaterial, setActiveMaterial] = useState(null)
+    const [isFirstMaterial, setIsFirstMaterial] = useState(true);
+    const [isLastMaterial, setIsLastMaterial] = useState(true);
+
 
     const fetchMaterialActive = useCallback(async () => {
         if (!courseId || !chapterId || !materialId) {
@@ -74,6 +77,82 @@ export const LearningProvider = ({children}) => {
         }
     }, []);
 
+    const goToNextMaterial = useCallback(() => {
+        if (!chapters || !chapterId || !materialId) return;
+
+        const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
+        const currentChapter = chapters[currentChapterIndex];
+
+        if (!currentChapter || !currentChapter.materials) return;
+
+        const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
+
+        if (currentMaterialIndex < currentChapter.materials.length - 1) {
+            const nextMaterial = currentChapter.materials[currentMaterialIndex + 1];
+            setMaterialId(nextMaterial.material_id);
+        } else {
+            const nextChapterIndex = currentChapterIndex + 1;
+            if (nextChapterIndex < chapters.length) {
+                const nextChapter = chapters[nextChapterIndex];
+                if (nextChapter.materials && nextChapter.materials.length > 0) {
+                    setChapterId(nextChapter.chapter_id);
+                    setMaterialId(nextChapter.materials[0].material_id);
+                }
+            } else {
+                console.log("No more materials (end of course).");
+            }
+        }
+    }, [chapters, chapterId, materialId, setChapterId, setMaterialId]);
+
+    const goToPrevMaterial = useCallback(() => {
+        if (!chapters || !chapterId || !materialId) return;
+
+        const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
+        const currentChapter = chapters[currentChapterIndex];
+
+        if (!currentChapter || !currentChapter.materials) return;
+
+        const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
+
+        if (currentMaterialIndex > 0) {
+            const prevMaterial = currentChapter.materials[currentMaterialIndex - 1];
+            setMaterialId(prevMaterial.material_id);
+        } else {
+            const prevChapterIndex = currentChapterIndex - 1;
+            if (prevChapterIndex >= 0) {
+                const prevChapter = chapters[prevChapterIndex];
+                if (prevChapter.materials && prevChapter.materials.length > 0) {
+                    setChapterId(prevChapter.chapter_id);
+                    setMaterialId(prevChapter.materials[prevChapter.materials.length - 1].material_id);
+                }
+            } else {
+                console.log("No more previous materials (start of course).");
+            }
+        }
+    }, [chapters, chapterId, materialId, setChapterId, setMaterialId]);
+
+    useEffect(() => {
+        if (chapters && chapterId && materialId) {
+            const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
+            const currentChapter = chapters[currentChapterIndex];
+
+            if (currentChapter && currentChapter.materials) {
+                const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
+
+                const isCurrentFirstMaterial = currentMaterialIndex === 0 && currentChapterIndex === 0;
+                setIsFirstMaterial(isCurrentFirstMaterial);
+
+                const isCurrentLastMaterial =
+                    currentMaterialIndex === currentChapter.materials.length - 1 &&
+                    currentChapterIndex === chapters.length - 1;
+                setIsLastMaterial(isCurrentLastMaterial);
+            }
+        } else {
+            setIsFirstMaterial(true);
+            setIsLastMaterial(true);
+        }
+    }, [chapters, chapterId, materialId]);
+
     useEffect(() => {
         if (slug) {
             (async () => {
@@ -112,7 +191,11 @@ export const LearningProvider = ({children}) => {
         activeMaterial,
         loadingActivity,
         errorActivity,
-        fetchActivity
+        fetchActivity,
+        goToNextMaterial,
+        goToPrevMaterial,
+        isFirstMaterial,
+        isLastMaterial
     };
 
     return (

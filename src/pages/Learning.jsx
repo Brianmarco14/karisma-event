@@ -3,7 +3,6 @@ import {TiArrowBack} from "react-icons/ti"
 import {Link, useParams} from "react-router-dom"
 import SidebarNavigation from "./partial/SidebarNavigation"
 import {useEffect, useState} from "react"
-import Button from "../components/Button"
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io"
 import {useLearning} from "@/context/LearningContext.jsx";
 import QuizDetail from "@/pages/partial/QuizDetail.jsx";
@@ -12,12 +11,48 @@ import WebinarDetail from "@/pages/partial/WebinarDetail.jsx";
 import TextDetail from "@/pages/partial/TextDetail.jsx";
 import VideoDetail from "@/pages/partial/VideoDetail.jsx";
 import PracticeDetail from "@/pages/partial/PracticeDetail.jsx";
+import Button from "@/components/ui/Button.jsx";
 
 
 const Learning = () => {
     const {slug} = useParams();
 
-    const {activity, setSlug, setCourseId, activeMaterial} = useLearning();
+    const {
+        activity,
+        setSlug,
+        setCourseId,
+        activeMaterial,
+        goToNextMaterial,
+        goToPrevMaterial,
+        isFirstMaterial,
+        isLastMaterial
+    } = useLearning();
+    const [openSidebar, setOpenSidebar] = useState(false)
+
+    const handleSidebar = () => {
+        setOpenSidebar(!openSidebar)
+    }
+
+    const renderMaterialDetail = () => {
+        if (!activeMaterial) return null;
+
+        switch (activeMaterial.type) {
+            case 'quiz':
+                return <QuizDetail data={activeMaterial}/>;
+            case 'reading':
+                return <ReadingDetail data={activeMaterial}/>;
+            case 'webinar':
+                return <WebinarDetail data={activeMaterial}/>;
+            case 'text':
+                return <TextDetail data={activeMaterial}/>;
+            case 'video':
+                return <VideoDetail data={activeMaterial}/>;
+            case 'practice':
+                return <PracticeDetail data={activeMaterial}/>;
+            default:
+                return <p className="text-white">Tipe materi tidak dikenali.</p>;
+        }
+    };
 
     useEffect(() => {
         if (slug) {
@@ -31,20 +66,6 @@ const Learning = () => {
         }
     }, [activity, setCourseId]);
 
-
-    const [openSidebar, setOpenSidebar] = useState(false)
-
-
-    const handleActiveMaterial = () => {
-
-    }
-
-    const handleSidebar = () => {
-        setOpenSidebar(!openSidebar)
-    }
-
-    const handleShowMaterial = (material) => {
-    }
     return (
         <div className="relative flex h-[100svh] w-screen overflow-x-hidden overflow-y-auto lg:overflow-hidden">
             <div className='flex flex-col grow lg:w-[70%] lg:overflow-y-auto'>
@@ -102,30 +123,21 @@ const Learning = () => {
                 <div
                     className="relative flex flex-col items-center gap-y-5 py-5 min-h-[94vh] lg:min-h-[90vh] 2xl:min-h-[91vh]">
                     <div className="w-[95%] rounded-2xl overflow-hidden h-full">
-                        {activeMaterial && (() => { // <--- IIFE dimulai di sini
-                            switch (activeMaterial.type) {
-                                case 'quiz':
-                                    return <QuizDetail data={activeMaterial}/>;
-                                case 'reading':
-                                    return <ReadingDetail data={activeMaterial}/>;
-                                case 'webinar':
-                                    return <WebinarDetail data={activeMaterial}/>;
-                                case 'text':
-                                    return <TextDetail data={activeMaterial}/>;
-                                case 'video':
-                                    return <VideoDetail data={activeMaterial}/>;
-                                case 'practice':
-                                    return <PracticeDetail data={activeMaterial}/>;
-                                default:
-                                    return <p className="text-white">Tipe materi tidak dikenali.</p>;
-                            }
-                        })()}
+                        {activeMaterial && renderMaterialDetail()}
                     </div>
                     <div className="flex justify-between items-center w-[95%]">
-                        <Button color="abu" className={"hidden lg:flex"}><IoIosArrowBack/> kembali</Button>
+                        <Link to={'/'}>
+                            <Button color="abu" className={"hidden lg:flex"}><IoIosArrowBack/>Kembali</Button>
+                        </Link>
                         <div className="flex gap-0 lg:gap-3 justify-between w-full lg:w-fit">
-                            <Button color="abu"><IoIosArrowBack/> sebelumnya</Button>
-                            <Button>selanjutnya <IoIosArrowForward/></Button>
+                            {!isFirstMaterial && (
+                                <Button onClick={goToPrevMaterial}
+                                        color="abu"><IoIosArrowBack/>Sebelumnya</Button>
+                            )}
+                            {!isLastMaterial && (
+                                <Button onClick={goToNextMaterial}
+                                >Selanjutnya<IoIosArrowForward/></Button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -133,9 +145,7 @@ const Learning = () => {
             {
                 activity && (
                     <SidebarNavigation
-                        handleShow={handleShowMaterial}
                         handleSidebar={handleSidebar}
-                        handleActive={handleActiveMaterial}
                         isOpen={openSidebar}
                     />
                 )
