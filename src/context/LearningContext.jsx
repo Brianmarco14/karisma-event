@@ -77,8 +77,25 @@ export const LearningProvider = ({children}) => {
         }
     }, []);
 
-    const goToNextMaterial = useCallback(() => {
+    const goToNextMaterial = useCallback(async () => {
         if (!chapters || !chapterId || !materialId) return;
+
+        if (courseId && chapterId && materialId && activeMaterial?.is_complete === 0) {
+            try {
+                await axios.post(`/course/material/complete`, {
+                    course_id: courseId,
+                    chapter_id: chapterId,
+                    material_id: materialId,
+                });
+                console.log("Current material marked as complete upon Next click:", activeMaterial.title);
+
+                setActiveMaterial(prev => prev ? {...prev, is_complete: 1} : null);
+
+                // await fetchActivity(slug); // Ini bisa memakan waktu, pertimbangkan UX
+            } catch (completeErr) {
+                console.error("Error marking current material as complete:", completeErr);
+            }
+        }
 
         const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
         const currentChapter = chapters[currentChapterIndex];
