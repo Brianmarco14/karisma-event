@@ -10,6 +10,7 @@ import ForgotPassword from "@/pages/auth/ForgotPassword.jsx";
 import ResetPassword from "@/pages/auth/ResetPassword.jsx";
 import VerifyLogin from "@/pages/auth/VerifyLogin.jsx";
 import ProtectedLayout from "@/components/layouts/ProtectedLayout.jsx";
+import LearningLayout from "@/components/layouts/LearningLayout.jsx";
 
 const App = () => {
     return (
@@ -26,7 +27,9 @@ const App = () => {
                     <Route element={<RootLayout/>}>
                         <Route index element={<Program/>}/>
                     </Route>
-                    <Route path="learning/:slug" element={<Learning/>}/>
+                    <Route element={<LearningLayout/>}>
+                        <Route path="learning/:slug" element={<Learning/>}/>
+                    </Route>
                     <Route path="voucher-reedem" element={<RedeemEvent/>}/>
                 </Route>
                 <Route path="*" element={<div>404 Not Found</div>}/>

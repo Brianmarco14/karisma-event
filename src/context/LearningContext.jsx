@@ -15,37 +15,88 @@ export const LearningProvider = ({children}) => {
     const [courseId, setCourseId] = useState(null);
     const [chapterId, setChapterId] = useState(null);
     const [materialId, setMaterialId] = useState(null);
-    const [syllabus, setSyllabus] = useState(null);
-    const [slug, setSlug] = useState(null); // This slug state is updated by the component using useParams
-    const [loadingSyllabus, setLoadingSyllabus] = useState(false);
-    const [errorSyllabus, setErrorSyllabus] = useState(null);
+    const [activity, setActivity] = useState(null);
+    const [slug, setSlug] = useState(null);
+    const [loadingActivity, setLoadingActivity] = useState(false);
+    const [errorActivity, setErrorActivity] = useState(null);
+    const [chapters, setChapters] = useState(null)
+    const [activeMaterial, setActiveMaterial] = useState(null)
 
-    const fetchSyllabus = useCallback(async (currentSlug) => {
-        if (!currentSlug) {
-            setSyllabus(null);
+    const fetchMaterialActive = useCallback(async () => {
+        if (!courseId || !chapterId || !materialId) {
+            setActiveMaterial(null);
             return;
         }
 
-        setLoadingSyllabus(true);
-        setErrorSyllabus(null);
+        setLoadingActivity(true);
+        setErrorActivity(null);
         try {
-            const response = await axios.get(`/course/${currentSlug}`);
-            setSyllabus(response.data);
+            const response = await axios.post(`/course/material`, {
+                course_id: courseId,
+                chapter_id: chapterId,
+                material_id: materialId,
+            });
+            setActiveMaterial(response.data.data);
         } catch (err) {
-            console.error("Error fetching syllabus:", err);
-            setErrorSyllabus(err);
+            console.error("Error fetching material:", err);
+            setErrorActivity(err);
         } finally {
-            setLoadingSyllabus(false);
+            setLoadingActivity(false);
+        }
+    }, [courseId, chapterId, materialId]);
+
+    const fetchActivity = useCallback(async (currentSlug) => {
+        if (!currentSlug) {
+            setActivity(null);
+            setChapters(null);
+            return;
+        }
+
+        setLoadingActivity(true);
+        setErrorActivity(null);
+        try {
+            const response = await axios.get(`/course/${currentSlug}/activity`);
+            setActivity(response.data.data);
+            setChapters(response.data.data.chapters)
+
+            const initialCourseId = response.data.data.course_id;
+            const initialChapterId = response.data.data.chapters?.[0]?.chapter_id;
+            const initialMaterialId = response.data.data.chapters?.[0]?.materials?.[0]?.material_id;
+
+            setCourseId(initialCourseId || null);
+            setChapterId(initialChapterId || null);
+            setMaterialId(initialMaterialId || null);
+        } catch (err) {
+            console.error("Error fetching activity:", err);
+            setErrorActivity(err);
+        } finally {
+            setLoadingActivity(false);
         }
     }, []);
 
     useEffect(() => {
         if (slug) {
-            fetchSyllabus(slug);
+            (async () => {
+                await fetchActivity(slug);
+            })();
         } else {
-            setSyllabus(null);
+            setActivity(null);
+            setChapters(null);
+            setCourseId(null);
+            setChapterId(null);
+            setMaterialId(null);
         }
-    }, [slug, fetchSyllabus]);
+    }, [slug, fetchActivity]);
+
+    useEffect(() => {
+        if (courseId && chapterId && materialId) {
+            (async () => {
+                await fetchMaterialActive();
+            })();
+        } else {
+            setActiveMaterial(null);
+        }
+    }, [courseId, chapterId, materialId, fetchMaterialActive]);
 
     const value = {
         courseId,
@@ -54,12 +105,14 @@ export const LearningProvider = ({children}) => {
         setChapterId,
         materialId,
         setMaterialId,
-        syllabus,
+        activity,
+        chapters,
         slug,
         setSlug,
-        loadingSyllabus,
-        errorSyllabus,
-        fetchSyllabus
+        activeMaterial,
+        loadingActivity,
+        errorActivity,
+        fetchActivity
     };
 
     return (
