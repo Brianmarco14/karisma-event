@@ -4,7 +4,6 @@ import {Link, useParams} from "react-router-dom"
 import SidebarNavigation from "./partial/SidebarNavigation"
 import {useEffect, useState} from "react"
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io"
-import {useLearning} from "@/context/LearningContext.jsx";
 import QuizDetail from "@/pages/partial/QuizDetail.jsx";
 import ReadingDetail from "@/pages/partial/ReadingDetail.jsx";
 import WebinarDetail from "@/pages/partial/WebinarDetail.jsx";
@@ -12,6 +11,7 @@ import TextDetail from "@/pages/partial/TextDetail.jsx";
 import VideoDetail from "@/pages/partial/VideoDetail.jsx";
 import PracticeDetail from "@/pages/partial/PracticeDetail.jsx";
 import Button from "@/components/ui/Button.jsx";
+import {useLearning} from "@/hooks/useLearning.js";
 
 
 const Learning = () => {

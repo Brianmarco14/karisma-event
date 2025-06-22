@@ -1,6 +1,6 @@
 import {LuMonitorPlay} from "react-icons/lu";
 import Accordion from "../../components/Accordion";
-import {useLearning} from "@/context/LearningContext.jsx";
+import {useLearning} from "@/hooks/useLearning.js";
 
 const SidebarNavigation = ({handleSidebar, isOpen}) => {
     const {

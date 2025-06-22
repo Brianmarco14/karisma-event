@@ -3,7 +3,7 @@ import {FaBookmark} from "react-icons/fa";
 import {MdKeyboardArrowRight} from "react-icons/md";
 import {RiYoutubeLine} from "react-icons/ri";
 import {TbRosetteDiscountCheckFilled} from "react-icons/tb";
-import {useLearning} from "@/context/LearningContext.jsx";
+import {useLearning} from "@/hooks/useLearning.js";
 
 const typeIcons = {
     video: (active) => (

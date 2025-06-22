@@ -1,15 +1,6 @@
-import {createContext, useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import axios from "@/config/axios/index.js";
-
-const LearningContext = createContext(null);
-
-export const useLearning = () => {
-    const context = useContext(LearningContext)
-    if (!context) {
-        throw new Error('useLearning must be used within a LearningProvider')
-    }
-    return context
-}
+import LearningContextObject from "./LearningContextObject";
 
 export const LearningProvider = ({children}) => {
     const [courseId, setCourseId] = useState(null);
@@ -19,10 +10,15 @@ export const LearningProvider = ({children}) => {
     const [slug, setSlug] = useState(null);
     const [loadingActivity, setLoadingActivity] = useState(false);
     const [errorActivity, setErrorActivity] = useState(null);
-    const [chapters, setChapters] = useState(null)
-    const [activeMaterial, setActiveMaterial] = useState(null)
+    const [chapters, setChapters] = useState(null);
+    const [activeMaterial, setActiveMaterial] = useState(null);
     const [isFirstMaterial, setIsFirstMaterial] = useState(true);
     const [isLastMaterial, setIsLastMaterial] = useState(true);
+
+    const [quizQuestions, setQuizQuestions] = useState(null);
+    const [currentQuizLog, setCurrentQuizLog] = useState(null);
+    const [loadingQuiz, setLoadingQuiz] = useState(false);
+    const [errorQuiz, setErrorQuiz] = useState(null);
 
 
     const fetchMaterialActive = useCallback(async () => {
@@ -30,7 +26,6 @@ export const LearningProvider = ({children}) => {
             setActiveMaterial(null);
             return;
         }
-
         setLoadingActivity(true);
         setErrorActivity(null);
         try {
@@ -54,7 +49,6 @@ export const LearningProvider = ({children}) => {
             setChapters(null);
             return;
         }
-
         setLoadingActivity(true);
         setErrorActivity(null);
         try {
@@ -88,10 +82,7 @@ export const LearningProvider = ({children}) => {
                     material_id: materialId,
                 });
                 console.log("Current material marked as complete upon Next click:", activeMaterial.title);
-
                 setActiveMaterial(prev => prev ? {...prev, is_complete: 1} : null);
-
-                // await fetchActivity(slug); // Ini bisa memakan waktu, pertimbangkan UX
             } catch (completeErr) {
                 console.error("Error marking current material as complete:", completeErr);
             }
@@ -99,11 +90,9 @@ export const LearningProvider = ({children}) => {
 
         const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
         const currentChapter = chapters[currentChapterIndex];
-
         if (!currentChapter || !currentChapter.materials) return;
 
         const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
-
         if (currentMaterialIndex < currentChapter.materials.length - 1) {
             const nextMaterial = currentChapter.materials[currentMaterialIndex + 1];
             setMaterialId(nextMaterial.material_id);
@@ -119,18 +108,16 @@ export const LearningProvider = ({children}) => {
                 console.log("No more materials (end of course).");
             }
         }
-    }, [chapters, chapterId, materialId, setChapterId, setMaterialId]);
+    }, [chapters, chapterId, materialId, courseId, activeMaterial, setChapterId, setMaterialId, setActiveMaterial]);
 
     const goToPrevMaterial = useCallback(() => {
         if (!chapters || !chapterId || !materialId) return;
 
         const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
         const currentChapter = chapters[currentChapterIndex];
-
         if (!currentChapter || !currentChapter.materials) return;
 
         const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
-
         if (currentMaterialIndex > 0) {
             const prevMaterial = currentChapter.materials[currentMaterialIndex - 1];
             setMaterialId(prevMaterial.material_id);
@@ -152,13 +139,10 @@ export const LearningProvider = ({children}) => {
         if (chapters && chapterId && materialId) {
             const currentChapterIndex = chapters.findIndex(c => c.chapter_id === chapterId);
             const currentChapter = chapters[currentChapterIndex];
-
             if (currentChapter && currentChapter.materials) {
                 const currentMaterialIndex = currentChapter.materials.findIndex(m => m.material_id === materialId);
-
                 const isCurrentFirstMaterial = currentMaterialIndex === 0 && currentChapterIndex === 0;
                 setIsFirstMaterial(isCurrentFirstMaterial);
-
                 const isCurrentLastMaterial =
                     currentMaterialIndex === currentChapter.materials.length - 1 &&
                     currentChapterIndex === chapters.length - 1;
@@ -194,17 +178,76 @@ export const LearningProvider = ({children}) => {
         }
     }, [courseId, chapterId, materialId, fetchMaterialActive]);
 
+    const fetchQuizQuestions = useCallback(async (quizMaterialId) => {
+        if (!materialId || !quizMaterialId) {
+            setErrorQuiz("Material ID or Quiz Material ID is missing.");
+            return;
+        }
+        setLoadingQuiz(true);
+        setErrorQuiz(null);
+        try {
+            const response = await axios.post(`/course/quiz/question`, {
+                material_id: materialId,
+                quiz_material_id: quizMaterialId,
+            });
+            setQuizQuestions(response.data.data.questions);
+            setCurrentQuizLog(response.data.data.log);
+            console.log("Fetched quiz questions and log:", response.data.data);
+        } catch (err) {
+            console.error("Error fetching quiz questions:", err);
+            setErrorQuiz(err);
+        } finally {
+            setLoadingQuiz(false);
+        }
+    }, [materialId]);
+
+    const answerQuizQuestion = useCallback(async (quizId, answerId) => {
+        if (!currentQuizLog?.log_id || !quizId || !answerId) {
+            setErrorQuiz("Quiz log ID, quiz ID, or answer ID is missing.");
+            return;
+        }
+        try {
+            const response = await axios.post(`/course/quiz/answer`, {
+                log_id: currentQuizLog.log_id,
+                quiz_id: quizId,
+                answer_id: answerId,
+            });
+            console.log("Quiz answer submitted:", response.data);
+        } catch (err) {
+            console.error("Error submitting quiz answer:", err);
+            setErrorQuiz(err);
+        }
+    }, [currentQuizLog]);
+
+    const finishQuiz = useCallback(async () => {
+        if (!currentQuizLog?.log_id) {
+            setErrorQuiz("Quiz log ID is missing to finish quiz.");
+            return;
+        }
+        setLoadingQuiz(true);
+        setErrorQuiz(null);
+        try {
+            const response = await axios.post(`/course/quiz/finish`, {
+                log_id: currentQuizLog.log_id,
+            });
+            console.log("Quiz finished:", response.data);
+            setQuizQuestions(null);
+            setCurrentQuizLog(null);
+        } catch (err) {
+            console.error("Error finishing quiz:", err);
+            setErrorQuiz(err);
+        } finally {
+            setLoadingQuiz(false);
+        }
+    }, [currentQuizLog]);
+
     const value = {
-        courseId,
-        setCourseId,
-        chapterId,
-        setChapterId,
-        materialId,
-        setMaterialId,
+        courseId, setCourseId,
+        chapterId, setChapterId,
+        materialId, setMaterialId,
         activity,
         chapters,
-        slug,
-        setSlug,
+        slug, setSlug,
         activeMaterial,
         loadingActivity,
         errorActivity,
@@ -212,12 +255,15 @@ export const LearningProvider = ({children}) => {
         goToNextMaterial,
         goToPrevMaterial,
         isFirstMaterial,
-        isLastMaterial
+        isLastMaterial,
+        quizQuestions, currentQuizLog,
+        loadingQuiz, errorQuiz,
+        fetchQuizQuestions, answerQuizQuestion, finishQuiz
     };
 
     return (
-        <LearningContext.Provider value={value}>
+        <LearningContextObject.Provider value={value}> {/* Gunakan LearningContextObject di sini */}
             {children}
-        </LearningContext.Provider>
+        </LearningContextObject.Provider>
     );
-}
+};
