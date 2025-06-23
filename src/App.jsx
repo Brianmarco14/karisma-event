@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import RootLayout from "./pages/RootLayout"
 import RedeemEvent from "./pages/RedeemEvent"
 import Program from "./pages/Program"
@@ -10,28 +10,31 @@ import ForgotPassword from "@/pages/auth/ForgotPassword.jsx";
 import ResetPassword from "@/pages/auth/ResetPassword.jsx";
 import VerifyLogin from "@/pages/auth/VerifyLogin.jsx";
 import ProtectedLayout from "@/components/layouts/ProtectedLayout.jsx";
+import LearningLayout from "@/components/layouts/LearningLayout.jsx";
 import Profile from "./pages/Profile"
 
 const App = () => {
     return (
         <>
             <Routes>
-                <Route element={<GuestLayout/>}>
-                    <Route path={'/login'} element={<Login/>}/>
-                    <Route path={'/register'} element={<Register/>}/>
-                    <Route path={'/forgot-password'} element={<ForgotPassword/>}/>
-                    <Route path={'/reset-password'} element={<ResetPassword/>}/>
-                    <Route path={'/verify-login'} element={<VerifyLogin/>}/>
+                <Route element={<GuestLayout />}>
+                    <Route path={'/login'} element={<Login />} />
+                    <Route path={'/register'} element={<Register />} />
+                    <Route path={'/forgot-password'} element={<ForgotPassword />} />
+                    <Route path={'/reset-password'} element={<ResetPassword />} />
+                    <Route path={'/verify-login'} element={<VerifyLogin />} />
                 </Route>
-                <Route element={<ProtectedLayout/>}>
-                    <Route element={<RootLayout/>}>
-                        <Route index element={<Program/>}/>
+                <Route element={<ProtectedLayout />}>
+                    <Route element={<RootLayout />}>
+                        <Route index element={<Program />} />
                     </Route>
-                    <Route path="learning/:slug" element={<Learning/>}/>
-                    <Route path="voucher-redeem" element={<RedeemEvent/>}/>
-                    <Route path="profile" element={<Profile />}/>
+                    <Route element={<LearningLayout />}>
+                        <Route path="learning/:slug" element={<Learning />} />
+                    </Route>                    
+                    <Route path="voucher-reedem" element={<RedeemEvent />} />
+                     <Route path="profile" element={<Profile />}/>
                 </Route>
-                <Route path="*" element={<div>404 Not Found</div>}/>
+                <Route path="*" element={<div>404 Not Found</div>} />
             </Routes>
         </>
     )

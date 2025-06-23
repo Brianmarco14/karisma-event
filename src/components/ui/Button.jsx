@@ -7,7 +7,7 @@ const Button = ({children, type, className, onClick, color = "biru", size = "md"
         hijau: 'bg-hijau hover:bg-hijau-dark text-white', // Added text-white for consistency
         merah: 'bg-merah hover:bg-merah-dark text-white', // Added text-white for consistency
         kuning: 'bg-kuning hover:bg-kuning-dark text-black', // Often better contrast with black text on yellow
-        abu: 'bg-abu hover:bg-abu-dark text-white',
+        abu: 'bg-abu hover:bg-abu-dark',
         putih: 'bg-white hover:bg-white-dark text-black border border-biru',
     };
 
