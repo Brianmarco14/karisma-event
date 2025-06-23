@@ -30,7 +30,7 @@ const CourseList = ({ data, handleSearch }) => {
                     data && data.length > 0 && data.map((item, index) => (
                         <div key={index} className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_1fr] gap-y-2 md:gap-y-0 md:gap-x-4  overflow-hidden p-3 md:p-4 my-4 lg:my-6 rounded-lg text-black border border-gray-300">
                             <div className="rounded-md overflow-hidden">
-                                <img src={`http://s3.karismaacademy.com/storage/courses/materials/4056/students/51242/20250621-063703-student-51242-material-4056.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=x22hqKhJJLeAojjGJrkzT8LcXdBYZ5VbrsWSiRDRTI6Cp9FQorAi6YwocT0B480AIYIX2ZavwAQmbcvg%2F20250621%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250621T063703Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=f6d63bdc7ef992eb6eaffc42bb6ec00e689e79346aa9e21538c6c28d9030e3a3`} alt={""} className="w-full h-full object-cover md:shrink-0" />
+                                <img src={`https://media.karismaacademy.com/${item.image}`} alt={""} className="w-full h-full object-cover md:shrink-0" />
                             </div>
                             <div
                                 className={"flex col-span-3 flex-col  gap-3 md:gap-2 2xl:gap-4 justify-between md:justify-center"}

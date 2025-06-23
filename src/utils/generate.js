@@ -5,3 +5,8 @@ export const formatDate = (isoString) => {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
+
+export const formatDurationToMinutes = (duration) => {
+  const [hours, minutes] = duration.split(":").map(Number);
+  return hours * 60 + minutes;
+}

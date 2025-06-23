@@ -259,6 +259,39 @@ export const LearningProvider = ({children}) => {
         }
     }, [fetchActivity, fetchCompleteMaterial, quizLogId]);
 
+    const uploadAssignment = useCallback(async (file) => {
+        if (!file) {
+          throw new Error("File tidak boleh kosong.");
+        }
+      
+        if (file.type !== "application/pdf") {
+          throw new Error("Hanya file PDF yang diperbolehkan.");
+        }
+      
+        if (file.size > 2 * 1024 * 1024) {
+          throw new Error("Ukuran file melebihi 2MB.");
+        }
+      
+        if (!materialId) {
+          throw new Error("Material ID tidak ditemukan.");
+        }
+      
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("material_id", materialId);
+      
+        const response = await axios.post("/course/practice/assignment", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      
+        await fetchCompleteMaterial();
+      
+        return response.data;
+      }, [materialId, fetchCompleteMaterial]);
+      
+
     const value = {
         courseId,
         setCourseId,
@@ -285,6 +318,7 @@ export const LearningProvider = ({children}) => {
         fetchQuizQuestions,
         answerQuizQuestion,
         finishQuiz,
+        uploadAssignment,
         quizLog,
         openQuestion,
         setOpenQuestion,
