@@ -1,39 +1,39 @@
-import {useState} from "react";
-import {FaBookmark} from "react-icons/fa";
-import {MdKeyboardArrowRight} from "react-icons/md";
-import {RiYoutubeLine} from "react-icons/ri";
-import {TbRosetteDiscountCheckFilled} from "react-icons/tb";
-import {useLearning} from "@/hooks/useLearning.js";
+import { useState } from "react";
+import { FaBookmark } from "react-icons/fa";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { RiYoutubeLine } from "react-icons/ri";
+import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
+import { useLearning } from "@/hooks/useLearning.js";
 
 const typeIcons = {
     video: (active) => (
-        <RiYoutubeLine className={`text-lg shrink-0 ${active ? "text-white" : "text-blue-800"}`}/>
+        <RiYoutubeLine className={`text-lg shrink-0 ${active ? "text-white" : "text-blue-800"}`} />
     ),
     reading: (active) => (
-        <img className="w-4" src={active ? "/sbw4.webp" : "/list4.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw4.webp" : "/list4.webp"} alt="" />
     ),
     webinar: (active) => (
-        <img className="w-4" src={active ? "/sbw1.webp" : "/list3.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw1.webp" : "/list3.webp"} alt="" />
     ),
     quiz: (active) => (
-        <img className="w-4" src={active ? "/sbw5.webp" : "/list2.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw5.webp" : "/list2.webp"} alt="" />
     ),
     practice: (active) => (
-        <img className="w-2" src={active ? "/sbw2.webp" : "/list1.webp"} alt=""/>
+        <img className="w-2" src={active ? "/sbw2.webp" : "/list1.webp"} alt="" />
     ),
     embed: (active) => (
-        <img className="w-4" src={active ? "/sbw3.webp" : "/material.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw3.webp" : "/material.webp"} alt="" />
     ),
     essay: (active) => (
-        <img className="w-4" src={active ? "/sbw3.webp" : "/material.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw3.webp" : "/material.webp"} alt="" />
     ),
     text: (active) => (
-        <img className="w-4" src={active ? "/sbw4.webp" : "/list4.webp"} alt=""/>
+        <img className="w-4" src={active ? "/sbw4.webp" : "/list4.webp"} alt="" />
     ),
 };
 
-const Accordion = ({chapter}) => {
-    const {materialId, setMaterialId, setChapterId} = useLearning();
+const Accordion = ({ chapter }) => {
+    const { materialId, setMaterialId, setChapterId } = useLearning();
     const [open, setOpen] = useState(false);
 
     const handleActive = (materialId, chapterId) => {
@@ -41,17 +41,29 @@ const Accordion = ({chapter}) => {
         setChapterId(chapterId);
     }
 
+    const allMaterialsComplete = chapter.materials?.length > 0
+        && chapter.materials.every((material) => material.is_complete);
+
+
     return (
         <div className="rounded-xl overflow-hidden mb-4 ">
             <button
-                className="w-full text-left px-4 py-4 font-bold text-white !bg-gradient-to-r from-hijau to-hijau-dark flex justify-between items-center rounded-xl"
+                className={`w-full text-left px-4 py-4 font-bold  flex justify-between items-center rounded-xl 
+    ${allMaterialsComplete
+                        ? "bg-gradient-to-r from-hijau to-hijau-dark text-white"
+                        : "bg-gradient-to-r from-gray-200 to-gray-300"
+                    }`}
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex items-center gap-2">
-                    <MdKeyboardArrowRight className={`${open ? 'rotate-90' : ''} duration-200 text-xl`}/>
+                    <MdKeyboardArrowRight className={`${open ? 'rotate-90' : ''} duration-200 text-xl`} />
                     <span>{chapter.chapter_name}</span>
                 </div>
-                <TbRosetteDiscountCheckFilled className="text-xl"/>
+                {
+                    allMaterialsComplete && (
+                        <TbRosetteDiscountCheckFilled className="text-xl text-white" />
+                    )
+                }
             </button>
 
             {open && (
@@ -67,7 +79,7 @@ const Accordion = ({chapter}) => {
                                 className={`duration-300 w-full text-left px-4 py-3 rounded-2xl my-2 mx-2 flex justify-between items-center shadow-sm relative  ${isComplete || isActive
                                     ? "text-black bg-kuning hover:bg-kuning-dark "
                                     : "bg-zinc-200 hover:bg-zinc-100"
-                                } ${isActive ? "!bg-gradient-to-r from-biru to-biru-dark !text-white" : ""}`}
+                                    } ${isActive ? "!bg-gradient-to-r from-biru to-biru-dark !text-white" : ""}`}
                             >
                                 <div className="flex items-center gap-2">
                                     {typeIcons[material.material_type] && typeIcons[material.material_type](isActive)}
@@ -79,7 +91,7 @@ const Accordion = ({chapter}) => {
                                 </div>
                                 {
                                     isActive && (
-                                        <FaBookmark className="text-kuning text-2xl absolute right-12 -top-0.5"/>
+                                        <FaBookmark className="text-kuning text-2xl absolute right-3 2xl:right-12 -top-0.5" />
                                     )
                                 }
 

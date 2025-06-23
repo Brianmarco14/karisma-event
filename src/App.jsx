@@ -27,12 +27,12 @@ const App = () => {
                 <Route element={<ProtectedLayout />}>
                     <Route element={<RootLayout />}>
                         <Route index element={<Program />} />
+                        <Route path="profile" element={<Profile />} />
                     </Route>
                     <Route element={<LearningLayout />}>
                         <Route path="learning/:slug" element={<Learning />} />
-                    </Route>                    
-                    <Route path="voucher-reedem" element={<RedeemEvent />} />
-                     <Route path="profile" element={<Profile />}/>
+                    </Route>
+                    <Route path="voucher-redeem" element={<RedeemEvent />} />
                 </Route>
                 <Route path="*" element={<div>404 Not Found</div>} />
             </Routes>

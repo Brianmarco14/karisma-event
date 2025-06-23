@@ -12,6 +12,8 @@ import VideoDetail from "@/pages/partial/VideoDetail.jsx";
 import PracticeDetail from "@/pages/partial/PracticeDetail.jsx";
 import Button from "@/components/ui/Button.jsx";
 import {useLearning} from "@/hooks/useLearning.js";
+import EssayDetail from "./partial/EssayDetail"
+import EmbedDetail from "./partial/EmbedDetail"
 
 
 const Learning = () => {
@@ -49,6 +51,10 @@ const Learning = () => {
                 return <VideoDetail data={activeMaterial}/>;
             case 'practice':
                 return <PracticeDetail data={activeMaterial}/>;
+            case 'essay':
+                return <EssayDetail/>;
+            case 'embed':
+                return <EmbedDetail/>;
             default:
                 return <p className="text-white">Tipe materi tidak dikenali.</p>;
         }

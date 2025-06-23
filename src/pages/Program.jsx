@@ -5,10 +5,16 @@ import axios from "@/config/axios/index.js";
 
 const Program = () => {
     const [courses, setCourses] = useState([])
+    const [seachQuery, setSearchQuery] = useState("");
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('/course')
+                const res = await axios.get(`/course?search=${seachQuery}`)
                 setCourses(res.data.data)
             } catch (error) {
                 console.error(error)
@@ -17,7 +23,7 @@ const Program = () => {
         }
 
         fetchData()
-    }, [])
+    }, [seachQuery])
 
     return (
         <div>
@@ -36,7 +42,7 @@ const Program = () => {
                     <img src="/robot.webp" alt="" className="transform scale-x-[-1]" />
                 </div>
             </div>
-            <CourseList data={courses}/>
+            <CourseList data={courses} handleSearch={handleSearch}/>
         </div>
     )
 }

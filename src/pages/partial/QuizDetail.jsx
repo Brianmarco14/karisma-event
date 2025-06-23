@@ -14,9 +14,6 @@ const QuizDetail = () => {
         setOpenQuestion(!openQuestion)
     }
 
-  const selesai = true
-  const nilai = 80
-
     if (!openQuestion) {
         if (data.is_complete) {
             return (

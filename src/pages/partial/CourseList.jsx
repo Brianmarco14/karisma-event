@@ -1,13 +1,12 @@
-import { RiFileList3Fill } from "react-icons/ri"
 import { Link } from "react-router-dom"
 
-const CourseList = ({ data }) => {
+const CourseList = ({ data, handleSearch }) => {
     return (
         <div className="w-full flex justify-center">
             <div className="lg:max-w-screen-lg 2xl:max-w-screen-2xl w-full px-2 lg:px-4 2xl:px-6 lg:py-4 2xl:py-5 border rounded-b-2xl shadow-xl top-0 bg-white">
                 <div className="hidden md:flex justify-between">
                     <label className="border pe-2 flex items-center text-gray-400 !outline-transparent rounded-xl overflow-hidden">
-                        <input type="text" className="grow outline-none p-2" placeholder="Cari Sertifikat" />
+                        <input type="text" className="grow outline-none p-2" placeholder="Cari Pelatihan"  onChange={(e) => handleSearch(e.target.value)}/>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 16 16"
@@ -21,16 +20,6 @@ const CourseList = ({ data }) => {
                             />
                         </svg>
                     </label>
-                    <select
-                        className="border w-full max-w-xs text-gray-400 !outline-transparent rounded-xl overflow-hidden"
-                        defaultValue="urutkan"
-                    >
-                        <option disabled value="urutkan">
-                            Urutkan
-                        </option>
-                        <option value="asc">Nama Sertifikat: A-Z</option>
-                        <option value="desc">Nama Sertifikat: Z-A</option>
-                    </select>
                 </div>
                 {
                     data.length === 0 && (
@@ -39,7 +28,7 @@ const CourseList = ({ data }) => {
                 }
                 {
                     data && data.length > 0 && data.map((item, index) => (
-                        <div key={index} className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_1fr] gap-y-2 md:gap-y-0 md:gap-x-4  overflow-hidden p-3 md:p-4 my-4 rounded-lg text-black border border-gray-300">
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_1fr] gap-y-2 md:gap-y-0 md:gap-x-4  overflow-hidden p-3 md:p-4 my-4 lg:my-6 rounded-lg text-black border border-gray-300">
                             <div className="rounded-md overflow-hidden">
                                 <img src={`http://s3.karismaacademy.com/storage/courses/materials/4056/students/51242/20250621-063703-student-51242-material-4056.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=x22hqKhJJLeAojjGJrkzT8LcXdBYZ5VbrsWSiRDRTI6Cp9FQorAi6YwocT0B480AIYIX2ZavwAQmbcvg%2F20250621%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250621T063703Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=f6d63bdc7ef992eb6eaffc42bb6ec00e689e79346aa9e21538c6c28d9030e3a3`} alt={""} className="w-full h-full object-cover md:shrink-0" />
                             </div>
